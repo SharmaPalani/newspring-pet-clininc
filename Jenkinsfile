@@ -6,6 +6,13 @@ pipeline {
                 git branch: 'prod', url: 'https://github.com/bkrrajmali/newspring-pet-clininc.git'
             }
         }
+
+         stage ('Maven Compile') {
+            steps {
+                echo "This is Maven Compile Stage"
+                sh 'mvn compile'
+            }
+        }
         stage('Build') {
             steps {
                 echo "This is Build stage "
