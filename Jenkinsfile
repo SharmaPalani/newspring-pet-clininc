@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven3.8.8' // Maven installation name in Jenkins
+    }
     stages {
         stage ('Checkout From Git') {
             steps {
