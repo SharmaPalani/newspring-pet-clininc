@@ -28,9 +28,12 @@ pipeline {
                 sh 'trivy fs --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
             }
         }
-        stage('Test') {
+        stage('Sonar Analysis') {
             steps {
-                echo "This is Test Stage"
+                 withSonarQubeEnv('sonarserver'){
+                    sh 'sonarscanner -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.sources=. '
+                 }
+
             }
         }
         stage('Deploy') {
