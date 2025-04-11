@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'maven' // Maven installation name in Jenkins
+        sonarScanner 'sonarscanner' // SonarQube server name in Jenkins
     }
     stages {
         stage ('Checkout From Git') {
@@ -31,7 +32,7 @@ pipeline {
         stage('Sonar Analysis') {
             steps {
                  withSonarQubeEnv('sonarserver'){
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.sources=. '''
+                    sh ''' sonar-scanner -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.sources=. '''
                  }
 
             }
