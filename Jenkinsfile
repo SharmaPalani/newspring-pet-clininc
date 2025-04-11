@@ -28,14 +28,7 @@ pipeline {
                 sh 'trivy fs --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
             }
         }
-        stage('Check SonarScanner Path') {
-            steps {
-                 sh  'which sonar-scanner'
-                 sh  'sonar-scanner --version'
-                 }
-
-            }
-        
+               
         stage('Sonar Analysis') {
             environment {
       SCANNER_HOME = tool 'Sonar-scanner'
