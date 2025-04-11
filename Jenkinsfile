@@ -35,7 +35,7 @@ pipeline {
                  }
 
             }
-        }
+        
         stage('Sonar Analysis') {
             steps {
                  withSonarQubeEnv('sonarserver'){
@@ -48,6 +48,6 @@ pipeline {
             steps {
                echo "This is Deploy Stage"
             }
+         }
         }
-    }
 }
