@@ -35,11 +35,18 @@ pipeline {
     }
             steps {
                  withSonarQubeEnv('sonarserver'){
-                    sh  '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.sources=. '''
+                    sh  '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=bkrrajmali -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.sources=. '''
                  }
 
             }
         }
+        stage('Quality Gate') {
+            steps {
+              timeout(time: 1, unit: 'MINUTES') {
+               waitForQualityGate abortPipeline: true, credentialsId: 'sonar'  
+          }
+        } 
+      }
         stage('Deploy') {
             steps {
                echo "This is Deploy Stage"
