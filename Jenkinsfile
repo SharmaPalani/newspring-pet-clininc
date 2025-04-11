@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'maven' // Maven installation name in Jenkins
-        sonarScanner 'sonarscanner' // SonarQube server name in Jenkins
+        sonarscanner 'sonarscanner' // SonarQube server name in Jenkins
     }
     stages {
         stage ('Checkout From Git') {
