@@ -2,7 +2,6 @@ pipeline {
     agent any
     tools {
         maven 'maven' // Maven installation name in Jenkins
-        SCANNER_HOME = tool 'sonarscanner'
     }
     stages {
         stage ('Checkout From Git') {
