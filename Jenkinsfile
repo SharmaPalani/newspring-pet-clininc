@@ -35,7 +35,7 @@ pipeline {
     }
             steps {
                  withSonarQubeEnv('sonarserver'){
-                    sh  '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=bkrrajmali -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.sources=. -Dsonar.exclusions=**/trivy-fs-output.txt '''
+                    sh  '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=bkrrajmali -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.java.binaries=. -Dsonar.exclusions=**/trivy-fs-output.txt '''
                  }
 
             }
