@@ -34,7 +34,7 @@ pipeline {
       SCANNER_HOME = tool 'Sonar-scanner'
     }
             steps {
-                 withSonarQubeEnv('sonar'){
+                 withSonarQubeEnv('sonarserver'){
                     sh  '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.sources=. '''
                  }
 
