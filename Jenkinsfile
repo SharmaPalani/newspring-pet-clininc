@@ -30,8 +30,8 @@ pipeline {
         }
         stage('Check SonarScanner Path') {
             steps {
-                 sh  which sonar-scanner
-                 sh  sonar-scanner --version
+                 sh  'which sonar-scanner'
+                 sh  'sonar-scanner --version'
                  }
 
             }
