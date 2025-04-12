@@ -4,53 +4,61 @@ pipeline {
         maven 'maven' // Maven installation name in Jenkins
     }
     stages {
-        stage ('Checkout From Git') {
+        stage('Checkout From Git') {
             steps {
                 git branch: 'prod', url: 'https://github.com/bkrrajmali/newspring-pet-clininc.git'
             }
         }
 
-         stage ('Maven Compile') {
+        stage('Maven Compile') {
             steps {
                 echo "This is Maven Compile Stage"
                 sh 'mvn compile'
             }
         }
-        stage ('Maven Test') {
+
+        stage('Maven Test') {
             steps {
                 echo "This is Maven Test Stage"
                 sh 'mvn test'
             }
         }
+
         stage('File System Scan By Trivy') {
             steps {
                 echo "Trivy Scan Started"
                 sh 'trivy fs --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
             }
         }
-               
+
         stage('Sonar Analysis') {
             environment {
-      SCANNER_HOME = tool 'Sonar-scanner'
-    }
+                SCANNER_HOME = tool 'Sonar-scanner'
+            }
             steps {
-                 withSonarQubeEnv('sonarserver'){
-                    sh  '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=bkrrajmali -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.java.binaries=. -Dsonar.exclusions=**/trivy-fs-output.txt '''
-                 }
-
+                withSonarQubeEnv('sonarserver') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=bkrrajmali -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.java.binaries=. -Dsonar.exclusions=**/trivy-fs-output.txt'''
+                }
             }
         }
+
         stage('Quality Gate') {
             steps {
-              timeout(time: 1, unit: 'MINUTES') {
-               waitForQualityGate abortPipeline: true, credentialsId: 'sonar'  
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
+                }
+            }
+        }
+        stage('Maven Package') {
+            steps {
+               echo 'Maven package Started'
+               sh 'mvn package'
           }
         } 
-      }
         stage('Deploy') {
             steps {
-               echo "This is Deploy Stage"
+                echo "This is Deploy Stage"
             }
-         }
+        }
     }
 }
