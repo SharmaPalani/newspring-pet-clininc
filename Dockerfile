@@ -14,7 +14,7 @@ RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
 # Replace ADD with COPY as no special features of ADD are needed
-COPY target/springbootApp.jar springbootApp.jar
+COPY target/petclinic.jar springbootApp.jar
 
 # Expose the application port
 EXPOSE 80
