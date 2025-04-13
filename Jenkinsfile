@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     // Build image from Dockerfile in the root directory
-                    def image = docker.build("myapp:${env.BUILD_NUMBER}")
+                    def image = docker.build("$IMAGE_NAME:${env.BUILD_NUMBER}")
                 }
             }
         }
