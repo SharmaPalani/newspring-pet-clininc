@@ -59,7 +59,7 @@ pipeline {
                sh 'mvn package'
           }
         } 
-        stages {
+       
         stage('Build Docker Image') {
             steps {
                 script {
