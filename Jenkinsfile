@@ -81,7 +81,7 @@ pipeline {
             steps {
                 script {
                     // Build image from Dockerfile in the root directory
-                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
         }
@@ -122,25 +122,26 @@ pipeline {
         }
 
         stage('Deploy to AKS (Create or Rolling Update)') {
-    steps {
-        script {
-            echo "🚀 Deploying to AKS: Check if deployment exists"
-            sh """
-            kubectl apply -f k8s/springboot-pvc.yaml -n $K8S_NAMESPACE
+            steps {
+                script {
+                    echo "🚀 Deploying to AKS: Check if deployment exists"
+                    sh """
+                    kubectl apply -f k8s/springboot-pvc.yaml -n $K8S_NAMESPACE
 
-            if kubectl get deployment ${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE} > /dev/null 2>&1; then
-              echo "🔄 Deployment exists. Performing rolling update..."
-              kubectl set image deployment/${K8S_DEPLOYMENT} ${IMAGE_NAME}=${FULL_IMAGE_NAME} -n ${K8S_NAMESPACE}
-              kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
-            else
-              echo "🆕 Deployment does not exist. Creating deployment..."
-              kubectl apply -f k8s/deployment-with-tag.yaml -n ${K8S_NAMESPACE}
-              kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
-            fi
-            """
+                    if kubectl get deployment ${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE} > /dev/null 2>&1; then
+                      echo "🔄 Deployment exists. Performing rolling update..."
+                      kubectl set image deployment/${K8S_DEPLOYMENT} ${IMAGE_NAME}=${FULL_IMAGE_NAME} -n ${K8S_NAMESPACE}
+                      kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
+                    else
+                      echo "🆕 Deployment does not exist. Creating deployment..."
+                      kubectl apply -f k8s/deployment-with-tag.yaml -n ${K8S_NAMESPACE}
+                      kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
+                    fi
+                    """
+                }
+            }
         }
     }
-}
 
     post {
         success {
