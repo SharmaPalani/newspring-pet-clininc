@@ -1,9 +1,9 @@
 pipeline {
-    agent  any
-        tools {
-        maven 'maven' // Maven installation name in Jenkins
-            }
-    
+    agent any
+    tools {
+        maven 'Maven' // Ensure the Maven installation name matches the one configured in Jenkins
+    }
+
     environment {
         IMAGE_NAME = "springbootapp"
         IMAGE_TAG = "${BUILD_NUMBER}" // Use build number as version
@@ -73,12 +73,12 @@ pipeline {
                 }
             }
         }
-                stage('Azure Login to ACR') {
+        stage('Azure Login to ACR') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'azure-acr-sp', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
                     script {
                         sh '''
-                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant <your-tenant-id>
+                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant ec78375d-0db0-42cf-82a6-2e6403e95936
                         az acr login --name $ACR_NAME
                         '''
                     }
@@ -94,19 +94,6 @@ pipeline {
                     docker push ${FULL_IMAGE_NAME}
                     """
                 }
-            }
-        }
-    
-
-    post {
-        success {
-            echo "Docker image pushed: ${FULL_IMAGE_NAME}"
-        }
-    }
-
-        stage('Deploy') {
-            steps {
-                echo "This is Deploy Stage"
             }
         }
     }
