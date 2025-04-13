@@ -107,6 +107,7 @@ pipeline {
                     '''
                 }
             }
+        }
             stage('Deploy to AKS') {
             steps {
                 sh '''
@@ -114,7 +115,7 @@ pipeline {
                 '''
             }
         }
-    }
+    
 
     post {
         success {
