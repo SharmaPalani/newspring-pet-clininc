@@ -3,13 +3,13 @@ pipeline {
     tools {
         maven 'Maven' // Ensure the Maven installation name matches the one configured in Jenkins
     }
-
     environment {
         IMAGE_NAME = "springbootapp"
         IMAGE_TAG = "${BUILD_NUMBER}" // Use build number as version
         ACR_NAME = "jenkinsazure"
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
+        tenant-id = "ec78375d-0db0-42cf-82a6-2e6403e95936"
     }
 
     stages {
@@ -78,7 +78,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'azure-acr-sp', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
                     script {
                         sh '''
-                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant ec78375d-0db0-42cf-82a6-2e6403e95936
+                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $tenant-id
                         az acr login --name $ACR_NAME
                         '''
                     }
