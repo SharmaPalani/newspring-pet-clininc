@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         IMAGE_NAME = "springbootapp"
-        IMAGE_TAG = "latest" // Use build number as version
+        IMAGE_TAG = "${BUILD_NUMBER}" // Use build number as version
         ACR_NAME = "jenkinsazure"
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
@@ -79,7 +79,7 @@ pipeline {
             steps {
                 script {
                     // Build image from Dockerfile in the root directory
-                    def image = docker.build("$IMAGE_NAME:${env.latest}")
+                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
         }
@@ -119,15 +119,23 @@ pipeline {
             }
         }
 
-        stage('Deploy to AKS') {
+        stage('Update K8s YAML and Deploy') {
             steps {
-                sh '''
-                kubectl apply -f k8s/springboot-deployment.yaml
-                '''
+                script {
+                    // Replace latest with current build number in deployment template
+                    sh """
+                    sed 's|springbootapp:latest|springbootapp:${IMAGE_TAG}|' k8s/springboot-deployment.yaml > k8s/deployment-with-tag.yaml
+                    """
+
+                    sh '''
+                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
+                    kubectl apply -f k8s/springboot-pvc.yaml
+                    kubectl apply -f k8s/deployment-with-tag.yaml
+                    '''
+                }
             }
         }
     }
-
     post {
         success {
             echo "Successfully deployed to AKS: $FULL_IMAGE"
