@@ -3,10 +3,10 @@ pipeline {
     tools {
         maven 'maven' // Maven installation name in Jenkins
     }
-    // docker { 
-    //         image 'docker:latest'
-    //         args '-v /var/run/docker.sock:/var/run/docker.sock' // Bind mount Docker socket
-    //     }
+    docker { 
+            image 'docker:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Bind mount Docker socket
+        }
     stages {
         stage('Checkout From Git') {
             steps {
