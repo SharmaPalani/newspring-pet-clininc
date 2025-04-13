@@ -12,6 +12,8 @@ pipeline {
         TENANT_ID = "ec78375d-0db0-42cf-82a6-2e6403e95936"
         RESOURCE_GROUP = "Jenkins"
         AKS_CLUSTER = "springboot"
+        K8S_NAMESPACE = "default"
+        K8S_DEPLOYMENT = "springbootapp-deployment"
     }
 
     stages {
@@ -119,29 +121,27 @@ pipeline {
             }
         }
 
-        stage('Update K8s YAML and Deploy') {
+        stage('Deploy to AKS (Rolling Update)') {
             steps {
                 script {
-                    // Replace latest with current build number in deployment template
+                    echo "🚀 Deploying image to AKS with rolling update"
                     sh """
-                    sed 's|springbootapp:latest|springbootapp:${IMAGE_TAG}|' k8s/springboot-deployment.yaml > k8s/deployment-with-tag.yaml
+                    kubectl apply -f k8s/springboot-pvc.yaml -n $K8S_NAMESPACE
+                    kubectl set image deployment/${K8S_DEPLOYMENT} ${IMAGE_NAME}=${FULL_IMAGE_NAME} -n ${K8S_NAMESPACE}
+                    kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
                     """
-
-                    sh '''
-                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
-                    kubectl apply -f k8s/springboot-pvc.yaml
-                    # // kubectl apply -f k8s/deployment-with-tag.yaml
-                    '''
                 }
             }
         }
     }
     post {
-    success {
-        script {
-            echo "✅ Deployment successful for image: ${env.ACR_LOGIN_SERVER}/${env.IMAGE_NAME}:${env.BUILD_NUMBER}"
+        success {
+            script {
+                echo "✅ Deployment successful: ${FULL_IMAGE_NAME}"
+            }
+        }
+        failure {
+            echo "❌ Deployment failed. Please check the logs."
         }
     }
-}
-
 }
