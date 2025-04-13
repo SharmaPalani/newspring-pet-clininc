@@ -384,6 +384,14 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+            <plugin>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-maven-plugin</artifactId>
+  <version>3.2.5</version>
+  <configuration>
+    <mainClass>org.springframework.samples.petclinic.PetClinicApplication</mainClass>
+  </configuration>
+</plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
