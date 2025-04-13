@@ -3,6 +3,10 @@ pipeline {
     tools {
         maven 'maven' // Maven installation name in Jenkins
     }
+    docker { 
+            image 'docker:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Bind mount Docker socket
+        }
     stages {
         stage('Checkout From Git') {
             steps {
@@ -55,6 +59,15 @@ pipeline {
                sh 'mvn package'
           }
         } 
+        stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build image from Dockerfile in the root directory
+                    def image = docker.build("myapp:${env.BUILD_NUMBER}")
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 echo "This is Deploy Stage"
