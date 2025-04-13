@@ -26,13 +26,6 @@ spec:
           limits:
             cpu: "500m"
             memory: "1Gi"
-        volumeMounts:
-        - name: app-storage
-          mountPath: /data
-      volumes:
-      - name: app-storage
-        persistentVolumeClaim:
-          claimName: springboot-pvc
       imagePullSecrets:
       - name: acr-auth
 ---
