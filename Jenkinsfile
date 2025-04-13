@@ -130,7 +130,7 @@ pipeline {
                     sh '''
                     az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
                     kubectl apply -f k8s/springboot-pvc.yaml
-                    kubectl apply -f k8s/deployment-with-tag.yaml
+                    # // kubectl apply -f k8s/deployment-with-tag.yaml
                     '''
                 }
             }
