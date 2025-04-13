@@ -48,7 +48,14 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('sonarserver') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=bkrrajmali -Dsonar.projectName=SpringBootPet -Dsonar.projectKey=bkrrajmali_springbootpet -Dsonar.java.binaries=. -Dsonar.exclusions=**/trivy-fs-output.txt'''
+                    sh '''
+                    $SCANNER_HOME/bin/sonar-scanner \
+                    -Dsonar.organization=bkrrajmali \
+                    -Dsonar.projectName=SpringBootPet \
+                    -Dsonar.projectKey=bkrrajmali_springbootpet \
+                    -Dsonar.java.binaries=. \
+                    -Dsonar.exclusions=**/trivy-fs-output.txt
+                    '''
                 }
             }
         }
@@ -60,13 +67,14 @@ pipeline {
                 }
             }
         }
+
         stage('Maven Package') {
             steps {
-               echo 'Maven package Started'
-               sh 'mvn package'
-          }
-        } 
-       
+                echo 'Maven package Started'
+                sh 'mvn package'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -75,6 +83,7 @@ pipeline {
                 }
             }
         }
+
         stage('Azure Login to ACR') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'azure-acr-sp', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
@@ -98,6 +107,7 @@ pipeline {
                 }
             }
         }
+
         stage('Azure Login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'azure-sp', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
@@ -108,19 +118,19 @@ pipeline {
                 }
             }
         }
-            stage('Deploy to AKS') {
+
+        stage('Deploy to AKS') {
             steps {
                 sh '''
                 kubectl apply -f k8s/springboot-deployment.yaml
                 '''
             }
         }
-    
+    }
 
     post {
         success {
             echo "Successfully deployed to AKS: $FULL_IMAGE"
         }
-    }
     }
 }
