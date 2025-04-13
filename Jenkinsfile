@@ -1,13 +1,10 @@
 pipeline {
     agent  {
-           docker {
-            image 'docker:24.0.7'  // Docker image that includes Docker CLI
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
-        }
-    }
-    tools {
+        tools {
         maven 'maven' // Maven installation name in Jenkins
     }
+    }
+   
 
     stages {
         stage('Checkout From Git') {
