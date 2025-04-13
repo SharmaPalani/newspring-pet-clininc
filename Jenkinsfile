@@ -137,8 +137,11 @@ pipeline {
         }
     }
     post {
-        success {
-            echo "Successfully deployed to AKS: $FULL_IMAGE"
+    success {
+        script {
+            echo "✅ Deployment successful for image: ${env.ACR_LOGIN_SERVER}/${env.IMAGE_NAME}:${env.BUILD_NUMBER}"
         }
     }
+}
+
 }
