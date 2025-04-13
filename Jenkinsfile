@@ -73,6 +73,37 @@ pipeline {
                 }
             }
         }
+                stage('Azure Login to ACR') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'azure-acr-sp', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+                    script {
+                        sh '''
+                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant <your-tenant-id>
+                        az acr login --name $ACR_NAME
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Tag and Push Image to ACR') {
+            steps {
+                script {
+                    sh """
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}
+                    docker push ${FULL_IMAGE_NAME}
+                    """
+                }
+            }
+        }
+    
+
+    post {
+        success {
+            echo "Docker image pushed: ${FULL_IMAGE_NAME}"
+        }
+    }
+
         stage('Deploy') {
             steps {
                 echo "This is Deploy Stage"

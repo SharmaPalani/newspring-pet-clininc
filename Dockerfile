@@ -5,7 +5,9 @@
 # EXPOSE 80
 # ENTRYPOINT ["java", "-jar", "springbootApp.jar"]
 # Use a specific version tag to ensure consistent builds
-FROM lolhens/baseimage-openjre
+#FROM lolhens/baseimage-openjre
+FROM openjdk:17-jdk-alpine
+
 
 # Create non-root user for security
 RUN addgroup -S spring && adduser -S spring -G spring
