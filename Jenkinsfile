@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         IMAGE_NAME = "springbootapp"
-        IMAGE_TAG = "${BUILD_NUMBER}" // Use build number as version
+        IMAGE_TAG = "latest" // Use build number as version
         ACR_NAME = "jenkinsazure"
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
