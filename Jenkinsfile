@@ -13,7 +13,7 @@ pipeline {
         RESOURCE_GROUP = "Jenkins"
         AKS_CLUSTER = "springboot"
         K8S_NAMESPACE = "default"
-        K8S_DEPLOYMENT = "springbootapp-app"
+        K8S_DEPLOYMENT = "springboot-app"
     }
 
     stages {
