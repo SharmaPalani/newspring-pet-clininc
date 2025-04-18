@@ -23,6 +23,13 @@ pipeline {
             }
 
         }
+        stage('file system scanning by trivy'){
+            steps {
+                echo "This is trivy scan"
+                sh 'trivy fs --format table . > result.txt'
+            }
+
+        }
         stage('Build') {
             steps {
                  echo "This is build"
