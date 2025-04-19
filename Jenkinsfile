@@ -26,7 +26,7 @@ pipeline {
         stage('file system scanning by trivy'){
             steps {
                 echo "This is trivy scan"
-                sh 'trivy fs --format table . > result.txt'
+                sh 'trivy fs --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
             }
 
         }
@@ -41,6 +41,7 @@ pipeline {
                     -Dsonar.organization=sharmapalani \
                     -Dsonar.projectName=jenkins_project \
                     -Dsonar.projectKey=sharmapalani_jenkins-project \
+                    -Dsonar.java.binaries=. \
                 '''
             }
             }
