@@ -41,7 +41,6 @@ pipeline {
                     -Dsonar.organization=sharmapalani \
                     -Dsonar.projectName=jenkins_project \
                     -Dsonar.projectKey=sharmapalani_jenkins-project \
-                    -Dsonar.java.binaries=. \
                 '''
             }
             }
