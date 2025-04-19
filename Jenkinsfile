@@ -46,25 +46,10 @@ pipeline {
             }
             }
         }
-        stage(' Sonar Quality Gate') {
+        stage('maven package'){
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true, credentialsId: 'sonar'}
-            }
-        }
-        stage('Build') {
-            steps {
-                 echo "This is build"
-            }
-        }
-        stage('Test') {
-            steps {
-              echo "This is test"
-            }
-        }
-        stage('Deploy') {
-            steps {
-                 echo "This is deploy"
+                echo "This is maven package"
+                sh 'mvn package'
             }
         }
     }
