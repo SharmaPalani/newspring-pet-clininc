@@ -5,7 +5,7 @@ pipeline {
     }
     environment{
         IMAGE_NAME = "jenkins_project"
-        IMAGE_TAG = "$(BUILD_NUMBER)"
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
     stages {
         stage('Checkout from git'){
