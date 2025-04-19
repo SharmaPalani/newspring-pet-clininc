@@ -30,6 +30,22 @@ pipeline {
             }
 
         }
+        stage('Sonar analysis'){
+            environment{
+                SCANNER_HOME = tool 'Sonar-scanner'
+            }
+            steps {
+                 withSonarQubeEnv('sonarserver') {
+                    sh '''
+                    $SCANNER_HOME/bin/sonar-scanner \
+                    -Dsonar.organization=SharmaPalani \
+                    -Dsonar.projectname=jenkins_project \
+                    -Dsonar.projectkey=sharmapalani_jenkins-project \
+                    -Dsonar.java.binaries=. \
+                '''
+            }
+            }
+        }
         stage('Build') {
             steps {
                  echo "This is build"
