@@ -3,6 +3,10 @@ pipeline {
     tools{
         maven 'maven'
     }
+    environment{
+        IMAGE_NAME = "jenkins_project"
+        IMAGE_TAG = "$(BUILD_NUMBER)"
+    }
     stages {
         stage('Checkout from git'){
             steps {
@@ -50,6 +54,14 @@ pipeline {
             steps {
                 echo "This is maven package"
                 sh 'mvn package'
+            }
+        }
+        stage('Docker build'){
+            steps{
+                script{
+                echo "this is docker build"
+                docker.build("$(IMAGE_NAME):$(IMAGE_TAG)")
+                }
             }
         }
     }
