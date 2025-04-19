@@ -39,8 +39,8 @@ pipeline {
                     sh '''
                     $SCANNER_HOME/bin/sonar-scanner \
                     -Dsonar.organization=SharmaPalani \
-                    -Dsonar.projectname=jenkins_project \
-                    -Dsonar.projectkey=sharmapalani_jenkins-project \
+                    -Dsonar.projectName=jenkins_project \
+                    -Dsonar.projectKey=sharmapalani_jenkins-project \
                     -Dsonar.java.binaries=. \
                 '''
             }
