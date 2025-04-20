@@ -112,10 +112,18 @@ pipeline {
          stage('AKS deployment'){
             steps{
                 script{
-                    echo "this is AKS deployment"
+                    echo "deploying to AKS: check if deployment exists"
                     sh '''
                         kubectl apply -f k8s/deployment.yaml
                         kubectl apply -f k8s/service.yaml
+                        if kubectl get deployment jenkins_project > /dev/null 2>&1; then
+                            echo "Deployment exists, updating image"
+                            kubectl set image deployment/jenkins_project jenkins_project=${FULL_IMAGE_NAME}
+                        else
+                            echo "Deployment does not exist, creating new one"
+                            kubectl apply -f k8s/deployment.yaml
+                            kubectl apply -f k8s/service.yaml
+                        fi
                     '''
                 }
             }
