@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
       - name: my-app-container
-        image: azurejenkins.azurecr.io/jenkins_project:20
+        image: azurejenkins.azurecr.io/jenkins_project:21
         ports:
-        - containerPort: 80
+        - containerPort: 8080
       imagePullSecrets:
       - name: acr-aks
 
