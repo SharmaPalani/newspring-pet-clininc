@@ -10,6 +10,8 @@ pipeline {
         ACR_NAME = "azurejenkins"
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
+        RESOURCE_GROUP = "rg"
+        AKS_CLUSTER = "jenkinsaks"
     }
     stages {
         stage('Checkout from git'){
@@ -89,6 +91,31 @@ pipeline {
                         echo "pushing image to ACR"
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}
                         docker push ${FULL_IMAGE_NAME}
+                    '''
+                }
+            }
+        }
+          stage('AKS login'){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'acr_login', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]){
+                    script{
+                    sh '''
+                        echo "login in to AKS"
+                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                        az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
+                    '''
+                    }
+                }
+            }
+
+        }
+         stage('AKS deployment'){
+            steps{
+                script{
+                    echo "this is AKS deployment"
+                    sh '''
+                        kubectl apply -f k8s/deployment.yaml
+                        kubectl apply -f k8s/service.yaml
                     '''
                 }
             }
